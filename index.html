@@ -19,8 +19,7 @@
             <h2 class="title is-3 has-text-black">Search for a City:</h2>
             <form id="search-form" style="margin-bottom: 0.5rem;">
                 <input id="search-input" class="input is-fullwidth block" type="text" placeholder="City Name">
-                <!-- <select id="format-input" class="input is-fullwidth"></select> -->
-
+              
                 <button class="button is-info is-fullwidth block">Search</button>
 
                 <ul id="city-list" >
@@ -39,8 +38,20 @@
         </div>
 
         <div class="column is-12 is-9-desktop p-3 has-text-black">
-            <h2>Showing results for <span id="result-text"></span></h2>
-            <div id="results"></div>
+            <div>
+                <h2 class="block">PLACEHOLDER<span id="city-name"></span><span id="current-date"></span></h2>
+            </div>
+
+            <div id="forecast" class="is-4 has-text-weight-bold has-text-black block">5-Day Forecast:</div>
+            <div id="5-day" class="card has-background-dark has-text-white">
+                <div class="card-header">
+                    <p class="card-header-title block date-1">date-1 <br> <span class="icon"></span></p>
+
+                </div>
+                <div class="card-content">
+                    <div class="content block"></div>
+                </div>
+            </div>
         </div>
     </div>
 
