@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Weather Dashboard</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@1.0.2/css/bulma.min.css">
+    <link rel="stylesheet" href="./assets/css/jass.css" />
+    <link rel="stylesheet" href="./assets/css/style.css" />
+  </head>
+  <body>
+
+    <header id="header" class="title is-2 is-spaced p-2 has-text-black has-text-centered has-background-link-90">Weather Dashboard</header>
+    
+    <div class="columns is-flex is-align-items-flex-start is-justify-content-flex-start is-align-content-flex-start has-background-white min-vh-100">
+        
+        <div class="column is-12 is-3-desktop has-background-white p-3">
+         
+            <h2 class="title is-3 has-text-black">Search for a City:</h2>
+            <form id="search-form" style="margin-bottom: 0.5rem;">
+                <input id="search-input" class="input is-fullwidth block" type="text" placeholder="City Name">
+                <!-- <select id="format-input" class="input is-fullwidth"></select> -->
+
+                <button class="button is-info is-fullwidth block">Search</button>
+
+                <ul id="city-list" >
+                    <li value="Atlanta" class="button is-fullwidth has-background-grey has-text-black block">Atlanta</li>
+                    <li value="Denver" class="button is-fullwidth has-background-grey has-text-black block">Denver</li>
+                    <li value="Seattle" class="button is-fullwidth has-background-grey has-text-black block">Seattle</li>
+                    <li value="San-Francisco" class="button is-fullwidth has-background-grey has-text-black block">San-Francisco</li>
+                    <li value="Orlando" class="button is-fullwidth has-background-grey has-text-black block">Orlando</li>
+                    <li value="New-York" class="button is-fullwidth has-background-grey has-text-black block">New-York</li>
+                    <li value="Chicago" class="button is-fullwidth has-background-grey has-text-black block">Chicago</li>
+                    <li value="Austin" class="button is-fullwidth has-background-grey has-text-black block">Austin</li>
+                </ul>
+
+            </form>
+
+        </div>
+
+        <div class="column is-12 is-9-desktop p-3 has-text-black">
+            <h2>Showing results for <span id="result-text"></span></h2>
+            <div id="results"></div>
+        </div>
+    </div>
+
+
+    <script src="./assets/js/script.js"></script>
+  </body>
+</html>
