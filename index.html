@@ -1,60 +1,170 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <meta charset="utf-8">
+    <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Weather Dashboard</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@1.0.2/css/bulma.min.css">
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bulma@1.0.2/css/bulma.min.css"
+    />
     <link rel="stylesheet" href="./assets/css/jass.css" />
     <link rel="stylesheet" href="./assets/css/style.css" />
   </head>
   <body>
+    <header
+      id="header"
+      class="title is-2 is-spaced p-2 has-text-black has-text-centered has-background-link-90"
+    >
+      Weather Dashboard
+    </header>
 
-    <header id="header" class="title is-2 is-spaced p-2 has-text-black has-text-centered has-background-link-90">Weather Dashboard</header>
-    
-    <div class="columns is-flex is-align-items-flex-start is-justify-content-flex-start is-align-content-flex-start has-background-white min-vh-100">
-        
-        <div class="column is-12 is-3-desktop has-background-white p-3">
-         
-            <h2 class="title is-3 has-text-black">Search for a City:</h2>
-            <form id="search-form" style="margin-bottom: 0.5rem;">
-                <input id="search-input" class="input is-fullwidth block" type="text" placeholder="City Name">
+    <div
+      class="columns is-flex is-align-items-flex-start is-justify-content-flex-start is-align-content-flex-start has-background-white min-vh-100"
+    >
+      <div class="column is-12 is-3-desktop has-background-white p-3">
+        <h2 class="title is-3 has-text-black">Search for a City:</h2>
+        <form id="search-form" style="margin-bottom: 0.5rem">
+          <input
+            id="search-input"
+            class="input is-fullwidth block"
+            type="text"
+            placeholder="City Name"
+          />
+
+          <button class="button is-info is-fullwidth block">Search</button>
+
+          <ul id="city-list">
+            <li
+             
+              value="Atlanta"
+              class="button is-fullwidth has-background-grey has-text-black block"
+            >
+              Atlanta
+            </li>
+            <li
               
-                <button class="button is-info is-fullwidth block">Search</button>
+              value="Denver"
+              class="button is-fullwidth has-background-grey has-text-black block"
+            >
+              Denver
+            </li>
+            <li
+              value="Seattle"
+              class="button is-fullwidth has-background-grey has-text-black block"
+            >
+              Seattle
+            </li>
+            <li
+              value="San-Francisco"
+              class="button is-fullwidth has-background-grey has-text-black block"
+            >
+              San-Francisco
+            </li>
+            <li
+              value="Orlando"
+              class="button is-fullwidth has-background-grey has-text-black block"
+            >
+              Orlando
+            </li>
+            <li
+              value="New-York"
+              class="button is-fullwidth has-background-grey has-text-black block"
+            >
+              New-York
+            </li>
+            <li
+              value="Chicago"
+              class="button is-fullwidth has-background-grey has-text-black block"
+            >
+              Chicago
+            </li>
+            <li
+              value="Austin"
+              class="button is-fullwidth has-background-grey has-text-black block"
+            >
+              Austin
+            </li>
+          </ul>
+        </form>
+      </div>
 
-                <ul id="city-list" >
-                    <li value="Atlanta" class="button is-fullwidth has-background-grey has-text-black block">Atlanta</li>
-                    <li value="Denver" class="button is-fullwidth has-background-grey has-text-black block">Denver</li>
-                    <li value="Seattle" class="button is-fullwidth has-background-grey has-text-black block">Seattle</li>
-                    <li value="San-Francisco" class="button is-fullwidth has-background-grey has-text-black block">San-Francisco</li>
-                    <li value="Orlando" class="button is-fullwidth has-background-grey has-text-black block">Orlando</li>
-                    <li value="New-York" class="button is-fullwidth has-background-grey has-text-black block">New-York</li>
-                    <li value="Chicago" class="button is-fullwidth has-background-grey has-text-black block">Chicago</li>
-                    <li value="Austin" class="button is-fullwidth has-background-grey has-text-black block">Austin</li>
-                </ul>
-
-            </form>
-
+      <div class="column is-12 is-9-desktop p-3 has-text-black">
+        <div>
+          <h2 id="city-header" class="box block">hewbjbefjhwe
+            <span id="city-name"></span>
+            <span id="current-date"></span>
+          </h2>
         </div>
 
-        <div class="column is-12 is-9-desktop p-3 has-text-black">
-            <div>
-                <h2 class="block">PLACEHOLDER<span id="city-name"></span><span id="current-date"></span></h2>
-            </div>
-
-            <div id="forecast" class="is-4 has-text-weight-bold has-text-black block">5-Day Forecast:</div>
-            <div id="5-day" class="card has-background-dark has-text-white">
-                <div class="card-header">
-                    <p class="card-header-title block date-1">date-1 <br> <span class="icon"></span></p>
-
-                </div>
-                <div class="card-content">
-                    <div class="content block"></div>
-                </div>
-            </div>
+        <div
+          id="forecast"
+          class="is-4 has-text-weight-bold has-text-black block"
+        >
+          5-Day Forecast:
         </div>
+        <div id="5-day" class="card is-flex is-justify-content-space-between">
+            <div class="container date-1">
+                <div class="card-header has-background-dark has-text-white">
+                    <p class="card-header-title">date-1<br />
+                        <span class="icon"></span>
+                    </p>
+                </div>
+                <div class="card-content has-background-dark has-text-white">
+                    <div class="content"></div>
+                </div>
+            </div>   <!-- end of container 1 -->
+
+            <div class="container date-2">
+                <div class="card-header has-background-dark has-text-white">
+                    <p class="card-header-title">date-2<br />
+                        <span class="icon"></span>
+                    </p>
+                </div>
+                <div class="card-content has-background-dark has-text-white">
+                    <div class="content"></div>
+                </div>
+            </div>   <!-- end of container 2 -->
+
+            <div class="container date-3">
+                <div class="card-header has-background-dark has-text-white">
+                    <p class="card-header-title">date-3<br />
+                        <span class="icon"></span>
+                    </p>
+                </div>
+                <div class="card-content has-background-dark has-text-white">
+                    <div class="content"></div>
+                </div>
+            </div>   <!-- end of container 3 -->
+
+            <div class="container date-4">
+                <div class="card-header has-background-dark has-text-white">
+                    <p class="card-header-title">date-4<br />
+                        <span class="icon"></span>
+                    </p>
+                </div>
+                <div class="card-content has-background-dark has-text-white">
+                    <div class="content"></div>
+                </div>
+            </div>   <!-- end of container 4 -->
+
+            <div class="container date-5">
+                <div class="card-header has-background-dark has-text-white">
+                    <p class="card-header-title">date-5<br />
+                        <span class="icon"></span>
+                    </p>
+                </div>
+                <div class="card-content has-background-dark has-text-white">
+                    <div class="content"></div>
+                </div>
+            </div>   <!-- end of container 5 -->
+
+
+
+            
+        </div>
+      </div>
     </div>
-
 
     <script src="./assets/js/script.js"></script>
   </body>
