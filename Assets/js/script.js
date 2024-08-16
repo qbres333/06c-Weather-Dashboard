@@ -59,8 +59,14 @@ function fetchGeocodeData(city) {
 
 }
 
+// store city data locally
 function storeSearchedCity(array) {
     localStorage.setItem(array, JSON.stringify(array));
+}
+
+function getStoredData(array) {
+    const cityData = JSON.parse(localStorage.getItem(array));
+    return cityData;
 }
 
 function fetchForecast(geocodeObj) {
