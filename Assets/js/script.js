@@ -29,10 +29,10 @@ function fetchGeocodeData(city) {
                     if(cityGeocode[0].name = city) {
                         const cityObj = {};
                         cityObj["cityName"] = cityGeocode[0].name;
-                        cityObj["cityLatitude"] = cityGeocode[0].lat; //is lat in quotes?
+                        cityObj["cityLatitude"] = cityGeocode[0].lat;
                         cityObj["cityLongitude"] = cityGeocode[0].lon;
-                        cityObj["cityCountry"] = cityGeocode[0].country;
-                        cityObj["cityState"] = cityGeocode[0].state;
+                        // cityObj["cityCountry"] = cityGeocode[0].country;
+                        // cityObj["cityState"] = cityGeocode[0].state;
 
                         // add the geocode data object to the array
                         geocodeArray.push(cityObj);
@@ -60,51 +60,62 @@ function fetchGeocodeData(city) {
 }
 
 // store city data locally
-function storeSearchedCity(array) {
-    localStorage.setItem(array, JSON.stringify(array));
+function storeSearchedCity(cityData) {
+    localStorage.setItem('cityData', JSON.stringify(cityData));
 }
 
-function getStoredData(array) {
-    const cityData = JSON.parse(localStorage.getItem(array));
+function getStoredData() {
+    const cityData = JSON.parse(localStorage.getItem('cityData'));
+    // if there's no data in local storage, store cities in new empty array
+    if(!cityData) {
+        cityData = [];
+    }
     return cityData;
 }
 
-function fetchForecast(geocodeObj) {
-    // URL for fetching weather data by latitude,longitude
-    let regURL = `https://api.openweathermap.org/data/2.5/forecast?lat={lat}&lon={lon}&appid={API key}`;
+function fetchForecast(city) {
+  
+  //   const city = cityData
+  if(cityData["cityName"] != city){
+    // error checking done in 
+    console.error("City data not found for:", city);
+  } else {
+    fetchGeocodeData(city);
     // get lat and lon data from the fetchGeocodeData function
-    const lat = geocodeObj.cityLatitude;
-    const lon = geocodeObj.cityLongitude;
+    const cityData = getStoredData();
 
-    regURL = `https://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&appid=${apiKey}`;
+    const lat = cityData["cityName"].cityLatitude;
+    const lon = cityData["cityName"].cityLongitude;
+    // URL for fetching weather data by latitude,longitude
+    const regURL = `https://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&appid=${apiKey}`;
 
-
-    // 
+    //send API request
     fetch(regURL)
-        .then(function (response) {
+      .then(function (response) {
         // if the request fails, show the JSON error. Otherwise return the promise.
         if (!response.ok) {
-            throw response.json();
+          throw response.json();
         }
         return response.json();
-        })
-        .then(function (weatherData) {
-            // create an array to store the various weather elements
-            const weatherArray = [];
-            // search API for city weather info
-            for(const cityWeather of weatherData) {
+      })
+      .then(function (weatherData) {
+        // create an array to store the various weather elements
+        const weatherArray = [];
 
-                if(typeof cityWeather === "object") {
-                    if(cityWeather[0].name = city) {
-                       
-                    } 
-                    
-                }
+        // search API for city weather info
+        for (const cityWeather of weatherData) {
+          if (typeof cityWeather === "object") {
+            if ((cityWeather[0].name = city)) {
             }
+          }
+        }
 
-            // checks for entries with the city's name
-           
-            
+        // checks for entries with the city's name
+      });
+  }
+  
 
-        })
+
+
+
 }
