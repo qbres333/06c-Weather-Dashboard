@@ -116,7 +116,8 @@ function fetchForecast(city) {
                     // weather icon
                     weatherObj["icon"] = cityWeather.list[5].weather.icon;
                     // API temperature is in Kelvins. Call function to convert to F
-                    weatherObj["temp"] = cityWeather.list[5].main.temp;
+                    const fTemp = convertKelvins(cityWeather.list[5].main.temp);
+                    weatherObj["temp"] = fTemp;
                     // API wind speed is in meters/sec. Call function to convert to MPH
                     weatherObj["wind"] = cityWeather.list[5].wind.speed;
                     // API humidity is a percentage
@@ -124,16 +125,21 @@ function fetchForecast(city) {
             
                 }
 
-
-
             }
-
-            // checks for entries with the city's name
+           
         });
     }
 
+}
 
+// function to convert kelvins to fahrenheit
+function convertKelvins(kelvins) {
+    const fahrenheit = ((kelvins - 273.15)*1.8)+32
+    return fahrenheit;
+}
 
-
-
+// function to convert wind speed from m/s to MPH
+function convertWindSpeed(metersPerSec) {
+    const mph = metersPerSec*2.2369;
+    return mph;
 }
