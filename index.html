@@ -14,7 +14,7 @@
   <body>
     <header
       id="header"
-      class="title is-2 is-spaced p-2 has-text-black has-text-centered has-background-link-90"
+      class="title is-2 is-spaced p-2 has-text-white has-text-centered has-background-link-90"
     >
       Weather Dashboard
     </header>
@@ -22,9 +22,9 @@
     <div
       class="columns is-flex is-align-items-flex-start is-justify-content-flex-start is-align-content-flex-start has-background-white min-vh-100"
     >
-      <div class="column is-12 is-3-desktop has-background-white p-3">
+      <div class="column is-12 is-3-desktop has-background-white p-3 ml-3">
         <h2 class="title is-3 has-text-black">Search for a City:</h2>
-        <form id="search-form" style="margin-bottom: 0.5rem">
+        <form id="search-form" class="mb-2">
           <input
             id="search-input"
             class="input is-fullwidth block"
@@ -38,50 +38,50 @@
             <li
              
               value="Atlanta"
-              class="button is-fullwidth has-background-grey has-text-black block"
+              class="button is-fullwidth has-background-grey-light has-text-black block"
             >
               Atlanta
             </li>
             <li
               
               value="Denver"
-              class="button is-fullwidth has-background-grey has-text-black block"
+              class="button is-fullwidth has-background-grey-light has-text-black block"
             >
               Denver
             </li>
             <li
               value="Seattle"
-              class="button is-fullwidth has-background-grey has-text-black block"
+              class="button is-fullwidth has-background-grey-light has-text-black block"
             >
               Seattle
             </li>
             <li
               value="San-Francisco"
-              class="button is-fullwidth has-background-grey has-text-black block"
+              class="button is-fullwidth has-background-grey-light has-text-black block"
             >
               San-Francisco
             </li>
             <li
               value="Orlando"
-              class="button is-fullwidth has-background-grey has-text-black block"
+              class="button is-fullwidth has-background-grey-light has-text-black block"
             >
               Orlando
             </li>
             <li
               value="New-York"
-              class="button is-fullwidth has-background-grey has-text-black block"
+              class="button is-fullwidth has-background-grey-light has-text-black block"
             >
               New-York
             </li>
             <li
               value="Chicago"
-              class="button is-fullwidth has-background-grey has-text-black block"
+              class="button is-fullwidth has-background-grey-light has-text-black block"
             >
               Chicago
             </li>
             <li
               value="Austin"
-              class="button is-fullwidth has-background-grey has-text-black block"
+              class="button is-fullwidth has-background-grey-light has-text-black block"
             >
               Austin
             </li>
@@ -89,73 +89,62 @@
         </form>
       </div>
 
-      <div class="column is-12 is-9-desktop p-3 has-text-black">
-        <div>
-          <h2 id="city-header" class="box block">hewbjbefjhwe
-            <span id="city-name"></span>
-            <span id="current-date"></span>
+      <div class="column is-12 is-9-desktop">
+        <div class="card mr-6 has-text-black">
+          <h2 id="city-header" class="p-2">hewbjbefjhwe
+            <span id="city-name"></span><span id="current-date"> </span>
           </h2>
         </div>
 
         <div
           id="forecast"
-          class="is-4 has-text-weight-bold has-text-black block"
+          class="is-4 has-text-weight-bold has-text-black block mr-6"
         >
           5-Day Forecast:
         </div>
-        <div id="5-day" class="card is-flex is-justify-content-space-between">
-            <div class="container date-1">
-                <div class="card-header has-background-dark has-text-white">
-                    <p class="card-header-title">date-1<br />
-                        <span class="icon"></span>
-                    </p>
+        <div id="5-day" class="card is-shadowless is-flex mr-6" style="border: 1px solid white;">
+            <div class="container date-1 mr-5">
+                <div class="card-header has-background-info-dark">
+                    <p class="card-header-title has-text-white">date-1</p>
                 </div>
-                <div class="card-content has-background-dark has-text-white">
-                    <div class="content"></div>
+                <div class="card-content has-background-info-dark">
+                    <div class="content has-text-white"></div>
                 </div>
             </div>   <!-- end of container 1 -->
 
-            <div class="container date-2">
-                <div class="card-header has-background-dark has-text-white">
-                    <p class="card-header-title">date-2<br />
-                        <span class="icon"></span>
-                    </p>
+            <div class="container date-2 mr-5">
+                <div class="card-header has-background-info-dark">
+                    <p class="card-header-title has-text-white">date-2</p>
                 </div>
-                <div class="card-content has-background-dark has-text-white">
-                    <div class="content"></div>
+                <div class="card-content has-background-info-dark">
+                    <div class="content has-text-white"></div>
                 </div>
             </div>   <!-- end of container 2 -->
 
-            <div class="container date-3">
-                <div class="card-header has-background-dark has-text-white">
-                    <p class="card-header-title">date-3<br />
-                        <span class="icon"></span>
-                    </p>
+            <div class="container date-3 mr-5">
+                <div class="card-header has-background-info-dark">
+                    <p class="card-header-title has-text-white">date-3</p>
                 </div>
-                <div class="card-content has-background-dark has-text-white">
-                    <div class="content"></div>
+                <div class="card-content has-background-info-dark">
+                    <div class="content has-text-white"></div>
                 </div>
             </div>   <!-- end of container 3 -->
 
-            <div class="container date-4">
-                <div class="card-header has-background-dark has-text-white">
-                    <p class="card-header-title">date-4<br />
-                        <span class="icon"></span>
-                    </p>
+            <div class="container date-4 mr-5">
+                <div class="card-header has-background-info-dark">
+                    <p class="card-header-title has-text-white">date-4</p>
                 </div>
-                <div class="card-content has-background-dark has-text-white">
-                    <div class="content"></div>
+                <div class="card-content has-background-info-dark">
+                    <div class="content has-text-white"></div>
                 </div>
             </div>   <!-- end of container 4 -->
 
             <div class="container date-5">
-                <div class="card-header has-background-dark has-text-white">
-                    <p class="card-header-title">date-5<br />
-                        <span class="icon"></span>
-                    </p>
+                <div class="card-header has-background-info-dark">
+                    <p class="card-header-title has-text-white">date-5</p>
                 </div>
-                <div class="card-content has-background-dark has-text-white">
-                    <div class="content"></div>
+                <div class="card-content has-background-info-dark">
+                    <div class="content has-text-white"></div>
                 </div>
             </div>   <!-- end of container 5 -->
 

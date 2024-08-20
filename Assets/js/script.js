@@ -119,10 +119,12 @@ function fetchForecast(city) {
                     const fTemp = convertKelvins(cityWeather.list[5].main.temp);
                     weatherObj["temp"] = fTemp;
                     // API wind speed is in meters/sec. Call function to convert to MPH
-                    weatherObj["wind"] = cityWeather.list[5].wind.speed;
-                    // API humidity is a percentage
+                    const windMPH = convertWindSpeed(cityWeather.list[5].wind.speed);
+                    weatherObj["wind"] = windMPH;
+                    // API humidity is a percentage (add the % sign when rendered)
                     weatherObj["humidity"] = cityWeather.list[5].main.humidity;
             
+                    weatherArray.push(weatherObj);
                 }
 
             }
@@ -131,6 +133,9 @@ function fetchForecast(city) {
     }
 
 }
+
+// retrieve current weather (today)
+function fetchCurrentWeather() {}
 
 // function to convert kelvins to fahrenheit
 function convertKelvins(kelvins) {
