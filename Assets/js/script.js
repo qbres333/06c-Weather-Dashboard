@@ -79,63 +79,106 @@ function fetchForecast(city) {
     // parse stored data (if any)
     fetchGeocodeData(city);
     const cityData = getStoredData();
-    
-    if(cityData.cityName != city){
-        /* error checking done in fetchGeocode function; shouldn't be 
-        needed here but will print to console */
-        console.error("City data not found for:", city);
-    } else {        
-        // get lat/lon data from the parsed data        
-        const lat = cityData.cityLatitude;
-        const lon = cityData.cityLongitude;
-        // URL for fetching weather data by latitude,longitude
-        const regURL = `https://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&appid=${apiKey}`;
+         
+    // get lat/lon data from the parsed data        
+    const lat = cityData.cityLatitude;
+    const lon = cityData.cityLongitude;
+    // URL for fetching weather data by latitude,longitude
+    const regURL = `https://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&appid=${apiKey}`;
 
-        //send API request
-        fetch(regURL)
-        .then(function (response) {
-            // if the request fails, show the JSON error. Otherwise return the promise.
-            if (!response.ok) {
-                throw response.json();
+    //send API request
+    fetch(regURL)
+    .then(function (response) {
+        // if the request fails, show the JSON error. Otherwise return the promise.
+        if (!response.ok) {
+            throw response.json();
+        }
+        return response.json();
+    })
+    .then(function (weatherData) {
+        /* create an array to store the various weather elements (date, icon, temp, wind, humidity) */
+        const weatherArray = [];
+
+        // retrieve city weather info
+        for (const cityWeather of weatherData) {                
+            if (typeof cityWeather === "object") {
+                const weatherObj = {};
+                weatherObj["name"] = cityWeather.city.name;
+                // Weather is in 3hr increments for each day. Return the 12pm temp data (5th element)
+                //API date is a unix timestamp. Convert.
+                const dateToday = dayjs(cityWeather.list[5].dt, "MM/DD/YYYY");
+                weatherObj["date"] = dateToday;
+                // weather icon
+                weatherObj["icon"] = cityWeather.list[5].weather.icon;
+                // API temperature is in Kelvins. Call function to convert to F
+                const fTemp = convertKelvins(cityWeather.list[5].main.temp);
+                weatherObj["temp"] = fTemp;
+                // API wind speed is in meters/sec. Call function to convert to MPH
+                const windMPH = convertWindSpeed(cityWeather.list[5].wind.speed);
+                weatherObj["wind"] = windMPH;
+                // API humidity is a percentage (add the % sign when rendered)
+                weatherObj["humidity"] = cityWeather.list[5].main.humidity;
+        
+                weatherArray.push(weatherObj);
             }
-            return response.json();
-        })
-        .then(function (weatherData) {
-            /* create an array to store the various weather elements (date, icon, temp, wind, humidity) */
-            const weatherArray = [];
 
-            // retrieve city weather info
-            for (const cityWeather of weatherData) {                
-                if (typeof cityWeather === "object") {
-                    const weatherObj = {};
-                    weatherObj["name"] = cityWeather.city.name;
-                    // Weather is in 3hr increments for each day. Return the 12pm temp data (5th element)
-                    //API date is a unix timestamp. Convert.
-                    const dateToday = dayjs(cityWeather.list[5].dt, "MM/DD/YYYY");
-                    weatherObj["date"] = dateToday;
-                    // weather icon
-                    weatherObj["icon"] = cityWeather.list[5].weather.icon;
-                    // API temperature is in Kelvins. Call function to convert to F
-                    const fTemp = convertKelvins(cityWeather.list[5].main.temp);
-                    weatherObj["temp"] = fTemp;
-                    // API wind speed is in meters/sec. Call function to convert to MPH
-                    const windMPH = convertWindSpeed(cityWeather.list[5].wind.speed);
-                    weatherObj["wind"] = windMPH;
-                    // API humidity is a percentage (add the % sign when rendered)
-                    weatherObj["humidity"] = cityWeather.list[5].main.humidity;
-            
-                    weatherArray.push(weatherObj);
-                }
-
-            }
-           
-        });
-    }
+        }
+        
+    });
+   
 
 }
 
 // retrieve current weather (today)
-function fetchCurrentWeather() {}
+function fetchCurrentWeather(city) {
+  // parse stored data (if any)
+  fetchGeocodeData(city);
+  const cityData = getStoredData();
+
+  // get lat/lon data from the parsed data
+  const lat = cityData.cityLatitude;
+  const lon = cityData.cityLongitude;
+  // URL for fetching weather data by latitude,longitude
+  const regURL = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${apiKey}`;
+
+  //send API request
+  fetch(regURL)
+    .then(function (response) {
+      // if the request fails, show the JSON error. Otherwise return the promise.
+      if (!response.ok) {
+        throw response.json();
+      }
+      return response.json();
+    })
+    .then(function (weatherData) {
+      /* create an array to store the various weather elements (date, icon, temp, wind, humidity) */
+      const weatherArray = [];
+
+      // retrieve city weather info
+      for (const cityWeather of weatherData) {
+        if (typeof cityWeather === "object") {
+          const weatherObj = {};
+          weatherObj["name"] = cityWeather.name;
+          // Weather is in 3hr increments for each day. Return the 12pm temp data (5th element)
+          //API date is a unix timestamp. Convert.
+          const dateToday = dayjs(cityWeather.dt, "MM/DD/YYYY");
+          weatherObj["date"] = dateToday;
+          // weather icon
+          weatherObj["icon"] = cityWeather.weather[0].icon;
+          // API temperature is in Kelvins. Call function to convert to F
+          const fTemp = convertKelvins(cityWeather.main.temp);
+          weatherObj["temp"] = fTemp;
+          // API wind speed is in meters/sec. Call function to convert to MPH
+          const windMPH = convertWindSpeed(cityWeather.wind.speed);
+          weatherObj["wind"] = windMPH;
+          // API humidity is a percentage (add the % sign when rendered)
+          weatherObj["humidity"] = cityWeather.main.humidity;
+
+          weatherArray.push(weatherObj);
+        }
+      }
+    });
+}
 
 // function to convert kelvins to fahrenheit
 function convertKelvins(kelvins) {
