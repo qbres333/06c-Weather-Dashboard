@@ -32,9 +32,7 @@ function fetchGeocodeData(city) {
                         cityObj["cityName"] = cityGeocode[0].name;
                         cityObj["cityLatitude"] = cityGeocode[0].lat;
                         cityObj["cityLongitude"] = cityGeocode[0].lon;
-                        // cityObj["cityCountry"] = cityGeocode[0].country;
-                        // cityObj["cityState"] = cityGeocode[0].state;
-
+                      
                         // add the geocode data object to the array
                         geocodeArray.push(cityObj);
                         storeSearchedCity(geocodeArray);
@@ -51,9 +49,8 @@ function fetchGeocodeData(city) {
                 cityHeaderEl.appendChild(errorMsg);
             } else {
                 fetchForecast(geocodeArray);
-                // const dateToday = dayjs().format('MM/DD/YYYY');
-
-                // cityHeaderEl.textContent = `${city} (${dateToday})`
+                fetchCurrentWeather(geocodeArray);
+               
             }
             
         });
@@ -97,29 +94,30 @@ function fetchForecast(city) {
     })
     .then(function (weatherData) {
         /* create an array to store the various weather elements (date, icon, temp, wind, humidity) */
-        const weatherArray = [];
+        const forecastArray = [];
 
         // retrieve city weather info
-        for (const cityWeather of weatherData) {                
+        for (const cityForecast of weatherData) {                
             if (typeof cityWeather === "object") {
-                const weatherObj = {};
-                weatherObj["name"] = cityWeather.city.name;
+                const forecastObj = {};
+                forecastObj["name"] = cityForecast.city.name;
                 // Weather is in 3hr increments for each day. Return the 12pm temp data (5th element)
                 //API date is a unix timestamp. Convert.
-                const dateToday = dayjs(cityWeather.list[5].dt, "MM/DD/YYYY");
-                weatherObj["date"] = dateToday;
+                const dateToday = dayjs(cityForecast.list[5].dt, "MM/DD/YYYY");
+                forecastObj["date"] = dateToday;
                 // weather icon
-                weatherObj["icon"] = cityWeather.list[5].weather.icon;
+                forecastObj["icon"] = cityForecast.list[5].weather.icon;
                 // API temperature is in Kelvins. Call function to convert to F
-                const fTemp = convertKelvins(cityWeather.list[5].main.temp);
-                weatherObj["temp"] = fTemp;
+                const fTemp = convertKelvins(cityForecast.list[5].main.temp);
+                forecastObj["temp"] = fTemp;
                 // API wind speed is in meters/sec. Call function to convert to MPH
-                const windMPH = convertWindSpeed(cityWeather.list[5].wind.speed);
-                weatherObj["wind"] = windMPH;
+                const windMPH = convertWindSpeed(cityForecast.list[5].wind.speed);
+                forecastObj["wind"] = windMPH;
                 // API humidity is a percentage (add the % sign when rendered)
-                weatherObj["humidity"] = cityWeather.list[5].main.humidity;
+                forecastObj["humidity"] = cityForecast.list[5].main.humidity;
         
-                weatherArray.push(weatherObj);
+                forecastArray.push(forecastObj);
+                storeSearchedCity(forecastArray);
             }
 
         }
@@ -152,29 +150,30 @@ function fetchCurrentWeather(city) {
     })
     .then(function (weatherData) {
       /* create an array to store the various weather elements (date, icon, temp, wind, humidity) */
-      const weatherArray = [];
+      const currWeatherArray = [];
 
       // retrieve city weather info
-      for (const cityWeather of weatherData) {
-        if (typeof cityWeather === "object") {
+      for (const currentWeather of weatherData) {
+        if (typeof currentWeather === "object") {
           const weatherObj = {};
-          weatherObj["name"] = cityWeather.name;
+          weatherObj["name"] = currentWeather.name;
           // Weather is in 3hr increments for each day. Return the 12pm temp data (5th element)
           //API date is a unix timestamp. Convert.
-          const dateToday = dayjs(cityWeather.dt, "MM/DD/YYYY");
+          const dateToday = dayjs(currentWeather.dt, "MM/DD/YYYY");
           weatherObj["date"] = dateToday;
           // weather icon
-          weatherObj["icon"] = cityWeather.weather[0].icon;
+          weatherObj["icon"] = currentWeather.weather[0].icon;
           // API temperature is in Kelvins. Call function to convert to F
-          const fTemp = convertKelvins(cityWeather.main.temp);
+          const fTemp = convertKelvins(currentWeather.main.temp);
           weatherObj["temp"] = fTemp;
           // API wind speed is in meters/sec. Call function to convert to MPH
-          const windMPH = convertWindSpeed(cityWeather.wind.speed);
+          const windMPH = convertWindSpeed(currentWeather.wind.speed);
           weatherObj["wind"] = windMPH;
           // API humidity is a percentage (add the % sign when rendered)
-          weatherObj["humidity"] = cityWeather.main.humidity;
+          weatherObj["humidity"] = currentWeather.main.humidity;
 
-          weatherArray.push(weatherObj);
+          currWeatherArray.push(weatherObj);
+          storeSearchedCity(currWeatherArray);
         }
       }
     });
@@ -183,11 +182,55 @@ function fetchCurrentWeather(city) {
 // function to convert kelvins to fahrenheit
 function convertKelvins(kelvins) {
     const fahrenheit = ((kelvins - 273.15)*1.8)+32
-    return fahrenheit;
+    return `${fahrenheit} F`;
 }
 
 // function to convert wind speed from m/s to MPH
 function convertWindSpeed(metersPerSec) {
     const mph = metersPerSec*2.2369;
-    return mph;
+    return `${mph} MPH`;
 }
+
+// render current weather box
+function createCurrentWeatherCard() {
+    const currentWeatherCard = getElementByID("current-card");
+    const currentCardBody = $("<div>").addClass("current-card-body");
+    const currWeatherHeader = $("<h2>").addClass("city-header p-2").text(`${weatherObj.name} (${weatherObj.date}) ${weatherObj.icon}`);
+    const currentTemp = $('<div>').addClass('current-Temp p-2').text(`Temp: ${weatherObj.temp}`);
+    const currentWind = $('<div>').addClass('current-Wind p-2').text(`Wind: ${weatherObj.wind}`);
+    const currentHumidity = $('<div>').addClass('current-Humidity p-2').text(`Humidity: ${weatherObj.humidity}%`);
+    // append current weather info to the card
+    currentCardBody.append(currWeatherHeader, currentTemp, currentWind, currentHumidity);
+    currentWeatherCard.append(currentCardBody);
+
+    return currentWeatherCard;
+
+}
+
+// render 5-day forecast data
+function createForecastCards() {
+
+    const forecastCard = getElementByID("container");
+    const forecastCardBody = $("<div>").addClass(
+      "forecast-card-body card-content has-background-info-dark has-text-white"
+    );
+    const forecastHeader = $("<h2>").addClass("date-header p-2").text(`${forecastObj.date}`);
+    const forecastTemp = $('<div>').addClass('forecast-Temp p-2').text(`Temp: ${forecastObj.temp}`);
+    const forecastWind = $('<div>').addClass('forecast-Wind p-2').text(`Wind: ${forecastObj.wind}`);
+    const forecastHumidity = $('<div>').addClass('forecast-Humidity p-2').text(`Humidity: ${forecastObj.humidity}%`);
+    // append current weather info to the card
+    forecastCardBody.append(forecastHeader, forecastTemp, forecastWind, forecastHumidity);
+    forecastCard.append(forecastCardBody);
+
+    return forecastCard;
+
+}
+// forecastObj
+
+// perform search and render data
+function citySearch(city) {
+    const weatherData = getStoredData();
+    
+}
+
+
