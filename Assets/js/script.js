@@ -1,11 +1,13 @@
-const inputEl = document.getElementByID("search-input");
-const cityHeaderEl = document.getElementByID("city-header");
+const searchFormEl = document.getElementById("search-form");
+const btnInputEl = document.querySelector("#search-input");
+const cityHeaderEl = document.getElementById("city-header");
+const cityButton = document.querySelector(".cityBtn");
 
 const apiKey = '32545b0997265663df9ff6fd8f6c9fca'
 
 
 /* get latitude and longitude data by searching the city name,
-then return today's weather */ 
+then store locally */ 
 function fetchGeocodeData(city) {
     // URL for direct Geocoding API call - converts city name input to coordinates
     const geocodeURL = `http://api.openweathermap.org/geo/1.0/direct?q=${city}&limit=3&appid=${apiKey}`;
@@ -47,9 +49,9 @@ function fetchGeocodeData(city) {
                 errorMsg.innerHTML = 
                     "No results found. Please check spelling and try again."
                 cityHeaderEl.appendChild(errorMsg);
-            } else {
-                fetchForecast(geocodeArray);
+            } else {                
                 fetchCurrentWeather(geocodeArray);
+                fetchForecast(geocodeArray);
                
             }
             
@@ -74,7 +76,6 @@ function getStoredData() {
 // retrieve 5-day forecast
 function fetchForecast(city) {
     // parse stored data (if any)
-    fetchGeocodeData(city);
     const cityData = getStoredData();
          
     // get lat/lon data from the parsed data        
@@ -117,7 +118,7 @@ function fetchForecast(city) {
                 forecastObj["humidity"] = cityForecast.list[5].main.humidity;
         
                 forecastArray.push(forecastObj);
-                storeSearchedCity(forecastArray);
+                // storeSearchedCity(forecastArray);
             }
 
         }
@@ -130,8 +131,10 @@ function fetchForecast(city) {
 // retrieve current weather (today)
 function fetchCurrentWeather(city) {
   // parse stored data (if any)
-  fetchGeocodeData(city);
   const cityData = getStoredData();
+  if(cityData) {
+    fetchGeocodeData(city);
+  }
 
   // get lat/lon data from the parsed data
   const lat = cityData.cityLatitude;
@@ -173,7 +176,7 @@ function fetchCurrentWeather(city) {
           weatherObj["humidity"] = currentWeather.main.humidity;
 
           currWeatherArray.push(weatherObj);
-          storeSearchedCity(currWeatherArray);
+        //   storeSearchedCity(currWeatherArray);
         }
       }
     });
@@ -228,9 +231,29 @@ function createForecastCards() {
 // forecastObj
 
 // perform search and render data
-function citySearch(city) {
+// 2 conditions: search button being clicked when there is an input value
+// and the button shortcuts being clicked
+function citySearch() {
     const weatherData = getStoredData();
-    
-}
+    const matchingCity = weatherData.find(city => city.cityName == btnInputEl.value);
+   
+    if(matchingCity) {
+        // if the button matches a city in the weather API
+            cityButton.addEventListener("click", () => {
+                fetchGeocodeData(city.name);
+                fetchCurrentWeather(city.name);
+                fetchForecast(city.name);
+                createCurrentWeatherCard();
+                createForecastCards();
+            });
+            
+        }
+    }
 
+
+// function fetchWeatherButton(event) {
+//     event.preventDefault();
+//     const cityBtn = document.getElementById("")
+//     const btnCityName = getAttribute("value");
+// }
 
