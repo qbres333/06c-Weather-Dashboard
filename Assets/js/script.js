@@ -1,5 +1,5 @@
 const searchFormEl = document.getElementById("search-form");
-const btnInputEl = document.querySelector("#search-input");
+const searchInputEl = document.querySelector("#search-input");
 const cityHeaderEl = document.getElementById("city-header");
 const cityButton = document.querySelector(".cityBtn");
 
@@ -228,14 +228,14 @@ function createForecastCards() {
     return forecastCard;
 
 }
-// forecastObj
 
 // perform search and render data
 // 2 conditions: search button being clicked when there is an input value
 // and the button shortcuts being clicked
 function citySearch() {
     const weatherData = getStoredData();
-    const matchingCity = weatherData.find(city => city.cityName == btnInputEl.value);
+    const matchingCity = weatherData.find(city => city.cityName == cityButton.value);
+    const searchedCity = weatherData.find(city => city.cityName == searchInputEl.value);
    
     if(matchingCity) {
         // if the button matches a city in the weather API
@@ -245,8 +245,13 @@ function citySearch() {
                 fetchForecast(city.name);
                 createCurrentWeatherCard();
                 createForecastCards();
-            });
-            
+            });            
+        } else if(searchedCity) {
+            fetchGeocodeData(city.name);
+            fetchCurrentWeather(city.name);
+            fetchForecast(city.name);
+            createCurrentWeatherCard();
+            createForecastCards();
         }
     }
 
