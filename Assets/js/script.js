@@ -31,22 +31,27 @@ function fetchGeocodeData(city) {
             if (cityGeocode.name == city) {
                 const cityObj = {};
                 cityObj["cityName"] = cityGeocode.name;
-                cityObj["cityLatitude"] = cityGeocode.lat;
-                cityObj["cityLongitude"] = cityGeocode.lon;
-
+                // lat and long must be rounded to 3 decimals to be matched in the weather functions
+                cityObj["cityLatitude"] = cityGeocode.lat.toFixed(3);
+                cityObj["cityLongitude"] = cityGeocode.lon.toFixed(3);
+                // ----------------------------test -----------------------------------
                 console.log(cityObj["cityName"]);
                 console.log(cityObj["cityLatitude"]);
                 console.log(cityObj["cityLongitude"]);
+
                 // add the geocode data object to the array
                 geocodeArray.push(cityObj);
                 storeSearchedCity(geocodeArray);
-          } else {
+            } else {
                 const errorMsg = document.createElement("h3");
+                
                 errorMsg.innerHTML =
                     "No results found. Please check spelling and try again.";
                 cityHeaderEl.appendChild(errorMsg);
                 console.log(errorMsg);
-          }
+                               
+            }
+            
           // }
         }
       })
@@ -73,8 +78,6 @@ function getStoredData() {
 // retrieve 5-day forecast
 function fetchForecast(city) {
   // get the geocode data for the city
-  fetchGeocodeData(city);
-  // parse stored data (if any)
   const cityData = getStoredData();
   const cityObj = cityData.find((cityObj) => cityObj.cityName == city);
   // if geocode data was retrieved for the city
@@ -95,34 +98,36 @@ function fetchForecast(city) {
         return response.json();
       })
       .then(function (weatherData) {
-        /* create an array to store the various weather elements (date, icon, temp, wind, humidity) */
-        const forecastArray = [];
+        
+        // Weather is in 3hr increments for each day. Return the 12pm temp data
+        const middayForecasts = weatherData.list.filter(forecast => forecast.dt_txt.includes("12:00:00"));
+        middayForecasts.forEach((forecast) => {
+            
+            //API date must be converted to unix timestamp.
+            const dateToday = dayjs(forecast.dt * 1000).format("MM/DD/YYYY");
+            const fTemp = convertKelvins(forecast.main.temp);
+            const icon = forecast.weather[0].icon;        
+            const windMPH = convertWindSpeed(forecast.wind.speed);
+            const humidity = forecast.main.humidity;
 
-        // retrieve city weather info
-        for (const cityForecast of weatherData.list) {
-          if (typeof cityForecast === "object") {
-            const forecastObj = {};
-            forecastObj["name"] = cityForecast.city.name;
-            // Weather is in 3hr increments for each day. Return the 12pm temp data (5th element)
-            //API date is a unix timestamp. Convert.
-            const dateToday = dayjs(cityForecast.list[5].dt, "MM/DD/YYYY");
-            forecastObj["date"] = dateToday;
-            // weather icon
-            forecastObj["icon"] = cityForecast.list[5].weather.icon;
-            // API temperature is in Kelvins. Call function to convert to F
-            const fTemp = convertKelvins(cityForecast.list[5].main.temp);
-            forecastObj["temp"] = fTemp;
-            // API wind speed is in meters/sec. Call function to convert to MPH
-            const windMPH = convertWindSpeed(cityForecast.list[5].wind.speed);
-            forecastObj["wind"] = windMPH;
-            // API humidity is a percentage (add the % sign when rendered)
-            forecastObj["humidity"] = cityForecast.list[5].main.humidity;
+            // Create a forecast card
+            const forecastCard = document.getElementById("container");
+            const forecastEl = document.createElement("div");
+            forecastEl.classList.add("forecast-day");
+            forecastEl.innerHTML = `
+                <h3>${dateToday}</h3>
+                <img src="https://openweathermap.org/img/wn/${icon}@2x.png" alt="weather icon" />
+                <div>Temp: ${fTemp}</div>
+                <div>Wind: ${windMPH}</div>
+                <div>Humidity: ${humidity}%</div>            
+                `;
 
-            forecastArray.push(forecastObj);
-            // storeSearchedCity(forecastArray);
-          }
-        }
-      });
+            // Append forecast element to the container
+            forecastCard.appendChild(forecastEl);
+        });
+
+      })
+     
   }
 }
 
@@ -152,52 +157,58 @@ function fetchCurrentWeather(city) {
             return response.json();
         })
         .then(function (weatherData) {
-            /* create an array to store the various weather elements (date, icon, temp, wind, humidity) */
-            const currWeatherArray = [];
-
+        
+            // const [currentWeather] = weatherData;
             // retrieve city weather info
-            for (const currentWeather of weatherData) {
-            if (typeof currentWeather === "object") {
-                const weatherObj = {};
-                weatherObj["name"] = currentWeather.name;
-                // Weather is in 3hr increments for each day. Return the 12pm temp data (5th element)
-                //API date is a unix timestamp. Convert.
-                const dateToday = dayjs(currentWeather.dt, "MM/DD/YYYY");
-                weatherObj["date"] = dateToday;
-                // weather icon
-                weatherObj["icon"] = currentWeather.weather[0].icon;
+            
+                const cName = weatherData.name;
+                const dateToday = dayjs(weatherData.dt * 1000).format("MM/DD/YYYY");
+                const icon = weatherData.weather[0].icon;
                 // API temperature is in Kelvins. Call function to convert to F
-                const fTemp = convertKelvins(currentWeather.main.temp);
-                weatherObj["temp"] = fTemp;
+                const fTemp = convertKelvins(weatherData.main.temp);                
                 // API wind speed is in meters/sec. Call function to convert to MPH
-                const windMPH = convertWindSpeed(currentWeather.wind.speed);
-                weatherObj["wind"] = windMPH;
+                const windMPH = convertWindSpeed(weatherData.wind.speed);
                 // API humidity is a percentage (add the % sign when rendered)
-                weatherObj["humidity"] = currentWeather.main.humidity;
+                const humidity = weatherData.main.humidity.toFixed(0);
 
-                currWeatherArray.push(weatherObj);
-                //   storeSearchedCity(currWeatherArray);
-            }
-            }
+                // Create a current weather card
+                const currWeatherCard = document.getElementById("current-card");
+                const currWeatherEl = document.createElement("div");
+                currWeatherEl.classList.add("forecast-day");
+                currWeatherEl.innerHTML = `
+                    <h3>${cName} (${dateToday}) 
+                        <img src="https://openweathermap.org/img/wn/${icon}@2x.png" alt="weather icon" />
+                    </h3>                    
+                    <div>Temp: ${fTemp}</div>
+                    <div>Wind: ${windMPH}</div>
+                    <div>Humidity: ${humidity}%</div>            
+                    `;
+
+                // Append forecast element to the container
+                currWeatherCard.appendChild(currWeatherEl);
+             
         });
     }
 }
 
 // function to convert kelvins to fahrenheit
 function convertKelvins(kelvins) {
-    const fahrenheit = ((kelvins - 273.15)*1.8)+32
+    const fahrenheit = (((kelvins - 273.15)*1.8)+32).toFixed(2);
     return `${fahrenheit} °F`;
 }
 
 // function to convert wind speed from m/s to MPH
 function convertWindSpeed(metersPerSec) {
-    const mph = metersPerSec*2.2369;
+    const mph = (metersPerSec*2.2369).toFixed(2);
     return `${mph} MPH`;
 }
 
+/* ----------------------- old weather card functions ----------------------------
 // render current weather box
 function createCurrentWeatherCard() {
     const currentWeatherCard = document.getElementById("current-card");
+    // Clear any existing content
+    currentWeatherCard.innerHTML = "";  
     const currentCardBody = $("<div>").addClass("current-card-body");
     const currWeatherHeader = $("<h2>").addClass("city-header p-2").text(`${weatherObj.name} (${weatherObj.date}) ${weatherObj.icon}`);
     const currentTemp = $('<div>').addClass('current-Temp p-2').text(`Temp: ${weatherObj.temp}`);
@@ -229,43 +240,20 @@ function createForecastCards() {
     return forecastCard;
 
 }
+*/
+
 
 // perform search and render data
 // 2 conditions: search button being clicked when there is an input value
 // and the button shortcuts being clicked
 function citySearch(event) {
-    event.preventDefault();
+  event.preventDefault();
 
     fetchGeocodeData(searchInputEl.value);
-    const weatherData = getStoredData();
+    fetchCurrentWeather(searchInputEl.value);
+    fetchForecast(searchInputEl.value);
 
-    // checks for entries of cities
-    if (weatherData.length > 0) {
-        const matchingCity = weatherData.find(
-            (btnCity) => btnCity.name == cityButton.value
-        );
-        const searchedCity = weatherData.find(
-            (inputCity) => inputCity.name == searchInputEl.value
-        );
-
-        if (matchingCity) {
-            // if the button matches a city in the weather API
-            // cityButton.addEventListener("click", () => {
-            // fetchGeocodeData(cityButton.value);
-            fetchCurrentWeather(cityButton.value);
-            fetchForecast(cityButton.value);
-            createCurrentWeatherCard();
-            createForecastCards();
-            // });
-        } else if (searchedCity) {
-            //search for input value
-            // fetchGeocodeData(searchInputEl.value);
-            fetchCurrentWeather(searchInputEl.value);
-            fetchForecast(searchInputEl.value);
-            createCurrentWeatherCard();
-            createForecastCards();
-        }
-    }
 }
 
 searchFormEl.addEventListener('submit', citySearch);
+
