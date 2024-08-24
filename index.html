@@ -15,15 +15,16 @@
   <body>
     <header
       id="header"
-      class="title is-2 is-spaced p-2 has-text-white has-text-centered has-background-link-90"
+      class="title is-1 is-spaced p-2 has-text-white has-text-centered has-background-link-90"
     >
       Weather Dashboard
     </header>
 
     <div
-      class="columns is-flex is-align-items-flex-start is-justify-content-flex-start is-align-content-flex-start has-background-white min-vh-100"
+      class="columns is-2 is-flex is-align-items-flex-start is-justify-content-flex-start 
+      is-align-content-flex-start has-background-white min-vh-100"
     >
-      <div class="column is-12 is-one-quarter-desktop is-one-quarter-tablet is-one-quarter-mobile has-background-white p-3 ml-3">
+      <div class="column is-3 has-background-white p-3 ml-3">
         <h2 class="title is-3 has-text-black">Search for a City:</h2>
         <form id="search-form" class="mb-2">
           <input
@@ -33,7 +34,8 @@
             placeholder="City Name"
           />
 
-          <button type="submit" class="button searchBtn is-info is-fullwidth block has-text-white-ter">Search</button>
+          <button type="submit" class="button searchBtn is-info is-fullwidth 
+          block has-text-white-ter">Search</button>
 
           <ul id="city-list">
             <li
@@ -96,7 +98,7 @@
         </form>
       </div>
 
-      <div class="column is-12 is-9-desktop is-9-tablet is-9-mobile">
+      <div class="column is-9">
         <div id="current-card" class="card mr-6 has-text-black">
           <h2 id="city-header" class="city-header p-2">input</h2>
         </div>
@@ -107,7 +109,7 @@
         >
           5-Day Forecast:
         </div>
-        <div id="5-day" class="card is-shadowless is-flex mr-6" 
+        <div id="5-day" class="card is-shadowless mr-6" 
           style="border: 1px solid white;">
             <div class="container date-1 mr-5 has-background-info-dark">
                 <!-- <div class="card-header has-background-info-dark">
