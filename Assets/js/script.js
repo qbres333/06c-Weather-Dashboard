@@ -43,14 +43,6 @@ function fetchGeocodeData(city) {
                 }
             }
 
-            // checks for entries of cities
-            if(geocodeArray.length === 0) {
-                const errorMsg = document.createElement("h3");
-                errorMsg.innerHTML = 
-                    "No results found. Please check spelling and try again."
-                cityHeaderEl.appendChild(errorMsg);
-                console.log(errorMsg);
-            } 
             
         });
 
@@ -227,27 +219,44 @@ function createForecastCards() {
 // perform search and render data
 // 2 conditions: search button being clicked when there is an input value
 // and the button shortcuts being clicked
-function citySearch() {
-    const weatherData = getStoredData();
-    const matchingCity = weatherData.find(city => city.name == cityButton.value);
-    const searchedCity = weatherData.find(city => city.name == searchInputEl.value);
-   
-    if(matchingCity) {
-        // if the button matches a city in the weather API
-            cityButton.addEventListener("click", () => {
-                fetchGeocodeData(cityButton.value);
-                fetchCurrentWeather(cityButton.value);
-                fetchForecast(cityButton.value);
-                createCurrentWeatherCard();
-                createForecastCards();
-            });            
-        } else if(searchedCity) { //search for input value
-            fetchGeocodeData(searchInputEl.value);
-            fetchCurrentWeather(searchInputEl.value);
-            fetchForecast(searchInputEl.value);
-            createCurrentWeatherCard();
-            createForecastCards();
-        }
-    }
+function citySearch(city) {
+  fetchGeocodeData(city);
+  const weatherData = getStoredData();
+
+  // checks for entries of cities
+  if (weatherData.length === 0) {
+    const errorMsg = document.createElement("h3");
+    errorMsg.innerHTML =
+      "No results found. Please check spelling and try again.";
+    cityHeaderEl.appendChild(errorMsg);
+    console.log(errorMsg);
+  }
+
+  
+  const matchingCity = weatherData.find(
+    (btnCity) => btnCity.name == cityButton.value
+  );
+  const searchedCity = weatherData.find(
+    (inputCity) => inputCity.name == searchInputEl.value
+  );
+
+  if (matchingCity) {
+    // if the button matches a city in the weather API
+    cityButton.addEventListener("click", () => {
+      // fetchGeocodeData(cityButton.value);
+      fetchCurrentWeather(cityButton.value);
+      fetchForecast(cityButton.value);
+      createCurrentWeatherCard();
+      createForecastCards();
+    });
+  } else if (searchedCity) {
+    //search for input value
+    // fetchGeocodeData(searchInputEl.value);
+    fetchCurrentWeather(searchInputEl.value);
+    fetchForecast(searchInputEl.value);
+    createCurrentWeatherCard();
+    createForecastCards();
+  }
+}
 
 searchFormEl.addEventListener('submit', citySearch());
