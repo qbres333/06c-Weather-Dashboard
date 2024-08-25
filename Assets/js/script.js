@@ -113,13 +113,13 @@ function fetchForecast(city) {
             // Create a forecast card
             const forecastCard = document.getElementById("container");
             const forecastEl = document.createElement("div");
-            forecastEl.classList.add("forecast-day");
+            forecastEl.classList.add("has-text-white");
             forecastEl.innerHTML = `
-                <h3>${dateToday}</h3>
-                <img src="https://openweathermap.org/img/wn/${icon}@2x.png" alt="weather icon" />
-                <div>Temp: ${fTemp}</div>
-                <div>Wind: ${windMPH}</div>
-                <div>Humidity: ${humidity}%</div>            
+                <h3 class="is-size-6 pl-2 has-text-weight-bold">${dateToday}</h3>
+                <img src="https://openweathermap.org/img/wn/${icon}@2x.png" alt="weather icon" class="image is-32x32 mr-2 mb-2"/>
+                <div class="is-size-7 mb-2 pl-2">Temp: ${fTemp}</div>
+                <div class="is-size-7 mb-2 pl-2">Wind: ${windMPH}</div>
+                <div class="is-size-7 mb-2 pl-2">Humidity: ${humidity}%</div>            
                 `;
 
             // Append forecast element to the container
@@ -174,14 +174,13 @@ function fetchCurrentWeather(city) {
                 // Create a current weather card
                 const currWeatherCard = document.getElementById("current-card");
                 const currWeatherEl = document.createElement("div");
-                currWeatherEl.classList.add("forecast-day");
+                currWeatherEl.classList.add("black-border");
                 currWeatherEl.innerHTML = `
-                    <h3>${cName} (${dateToday}) 
-                        <img src="https://openweathermap.org/img/wn/${icon}@2x.png" alt="weather icon" />
+                    <h3 class="is-size-5 mr-5 pl-2">${cName} (${dateToday}) <img src="https://openweathermap.org/img/wn/${icon}@2x.png" alt="weather icon" class="image is-32x32"/>
                     </h3>                    
-                    <div>Temp: ${fTemp}</div>
-                    <div>Wind: ${windMPH}</div>
-                    <div>Humidity: ${humidity}%</div>            
+                    <div class="is-size-6 mr-5 pl-2 pb-2">Temp: ${fTemp}</div>
+                    <div class="is-size-6 mr-5 pl-2 pb-2">Wind: ${windMPH}</div>
+                    <div class="is-size-6 mr-5 pl-2 pb-2">Humidity: ${humidity}%</div>            
                     `;
 
                 // Append forecast element to the container
