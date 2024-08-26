@@ -122,7 +122,7 @@ function fetchCurrentWeather(city) {
 
             currWeatherEl.classList.add("black-border");
             currWeatherEl.innerHTML = `
-                <h3 class="is-size-3 mr-5 pl-3 pt-1 level-left">${cName} (${dateToday}) 
+                <h3 class="is-size-4 mr-5 pl-3 pt-1 level-left">${cName} (${dateToday}) 
                   <img src="https://openweathermap.org/img/wn/${icon}@2x.png" alt="weather icon" class="icon is-large has-contrast"/>
                 </h3>                    
                 <div class="is-size-6 has-text-weight-bold mr-5 pl-3 pb-2">Temp: ${fTemp}</div>
