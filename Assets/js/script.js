@@ -13,7 +13,7 @@ function fetchGeocodeData(city) {
     const capitalizeCity = formatInput(city);
     const hyphenateQuery = capitalizeCity.replace(/\s/g, "-");
     // URL for direct Geocoding API call - converts city name input to coordinates  
-    const geocodeURL = `http://api.openweathermap.org/geo/1.0/direct?q=${hyphenateQuery}&limit=1&appid=${apiKey}`;
+    const geocodeURL = `https://api.openweathermap.org/geo/1.0/direct?q=${hyphenateQuery}&limit=1&appid=${apiKey}`;
 
     // request GeoCode data
     fetch(geocodeURL)
