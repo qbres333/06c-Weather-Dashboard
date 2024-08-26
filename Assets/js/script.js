@@ -10,9 +10,12 @@ const apiKey = '32545b0997265663df9ff6fd8f6c9fca';
 
 /* get latitude and longitude data by searching the city name,
 then store locally */ 
-function fetchGeocodeData(city) {  
+function fetchGeocodeData(city) {
+    // format query first with capitalization, then with hyphens for URL
+    const capitalizeCity = formatInput(city);
+    const hyphenateQuery = capitalizeCity.replace(/\s/g, "-");
     // URL for direct Geocoding API call - converts city name input to coordinates  
-    const geocodeURL = `http://api.openweathermap.org/geo/1.0/direct?q=${city}&limit=1&appid=${apiKey}`;
+    const geocodeURL = `http://api.openweathermap.org/geo/1.0/direct?q=${hyphenateQuery}&limit=1&appid=${apiKey}`;
 
     // request GeoCode data
     fetch(geocodeURL)
@@ -29,7 +32,8 @@ function fetchGeocodeData(city) {
         /* search API for city weather info; API output is an array of objects, 
             so geocodeData is an array and cityGeocode is an object */
         for (const cityGeocode of geocodeData) {
-            if (cityGeocode.name == city) {
+            const formattedCity = formatInput(city);
+            if (cityGeocode.name == formattedCity) {
                 const cityObj = {};
                 cityObj["cityName"] = cityGeocode.name;
                 // lat and long must be rounded to 3 decimals to be matched in the weather functions
@@ -116,20 +120,21 @@ function fetchForecast(city) {
 
           // Create a forecast card
           foreHeader.innerHTML = `5-Day Forecast:`;
-          const forecastEl = document.createElement("div");
-          forecastEl.classList.add("has-text-white");
-          forecastEl.classList.add("has-background-info-dark");
-        //   forecastEl.classList.add("ml-0");
-          forecastEl.innerHTML = `
+          const $forecastCard = $("#container"); //Bulma not rendering correctly so JQuery used here to render forecast horizontally
+          const $forecastEl = $("<div>");
+          $forecastEl.addClass(
+            "column ml-2 has-text-white has-background-info-dark"
+          );
+          $forecastEl.html(`
                 <h3 class="is-size-6 pl-2 pr-2 pt-2 has-text-weight-bold">${dateToday}</h3>
                 <img src="https://openweathermap.org/img/wn/${icon}@2x.png" alt="weather icon" class="image is-32x32 mr-2 mb-2"/>
                 <div class="is-size-7 mb-1 pl-2 pr-2">Temp: ${fTemp}</div>
                 <div class="is-size-7 mb-1 pl-2 pr-2">Wind: ${windMPH}</div>
                 <div class="is-size-7 mb-1 pl-2 pr-2 pb-2">Humidity: ${humidity}%</div>            
-                `;
+                `);
 
           // Append elements
-          foreWeather.appendChild(forecastEl);
+          $forecastCard.append($forecastEl);
         });
 
       })
@@ -162,7 +167,7 @@ function fetchCurrentWeather(city) {
         })
         .then(function (weatherData) {
             // retrieve city weather info            
-            const cName = weatherData.name;
+            const cName = cityObj.cityName;
             const dateToday = dayjs(weatherData.dt * 1000).format("MM/DD/YYYY");
             const icon = weatherData.weather[0].icon;
             // API temperature is in Kelvins. Call function to convert to F
