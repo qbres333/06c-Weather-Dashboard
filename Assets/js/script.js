@@ -1,6 +1,5 @@
 const searchFormEl = document.getElementById("search-form");
 const searchInputEl = document.querySelector("#search-input");
-const cityHeaderEl = document.getElementById("city-header");
 const cityButtons = document.querySelectorAll(".cityBtn");
 const currWeather = document.getElementById("current-card");
 const foreHeader = document.getElementById("forecast");
@@ -25,7 +24,7 @@ function fetchGeocodeData(city) {
         return response.json();
       })
       .then(function (geocodeData) {
-        // create an array to store the various weather elements
+        // create an array to store the various geocode elements
         const geocodeArray = [];
         /* search API for city weather info; API output is an array of objects, 
             so geocodeData is an array and cityGeocode is an object */
@@ -44,13 +43,18 @@ function fetchGeocodeData(city) {
                 // add the geocode data object to the array
                 geocodeArray.push(cityObj);
                 storeSearchedCity(geocodeArray);
+                // can I call weather functions here?
+                const formattedCity = formatInput(city);
+
+                fetchCurrentWeather(formattedCity);
+                fetchForecast(formattedCity);
                 
             } else {
                 const errorMsg = document.createElement("h3");
                 
                 errorMsg.innerHTML =
                     "No results found. Please check spelling and try again.";
-                cityHeaderEl.appendChild(errorMsg);
+                currWeather.appendChild(errorMsg);
                 console.log(errorMsg);                               
             }
                 
@@ -198,6 +202,20 @@ function convertWindSpeed(metersPerSec) {
     return `${mph} MPH`;
 }
 
+// standardize entries so that they match the API name format
+function formatInput(input) {
+    // if city name has more than one word, split into an array of words
+    const words = input.split(" ");
+    // capitalize the first letter of each word in the city name
+    const formatWords = words.map(word => {
+        const firstLetter = word.charAt(0).toUpperCase();
+        const remainingLetters = word.substring(1).toLowerCase();
+        return firstLetter + remainingLetters;
+    });
+    input = formatWords.join(' ');
+    searchInputEl.value = input;
+    return searchInputEl.value;
+}
 
 // perform search and render data
 function citySearch(event) {
@@ -210,23 +228,11 @@ function citySearch(event) {
     const city = formatInput(searchInputEl.value);
 
     fetchGeocodeData(city);
-    fetchCurrentWeather(city);
-    fetchForecast(city);
 
 }
 
 // perform search when search button is pressed
 searchFormEl.addEventListener('submit', citySearch);
-
-
-// standardize entries so that they match the API name format
-function formatInput(input) {
-    const firstLetter = input.charAt(0).toUpperCase();
-    const remainingLetters = input.substring(1).toLowerCase();
-    input = firstLetter + remainingLetters;
-    searchInputEl.value = input;
-    return searchInputEl.value; //with this included, geocode data renders after 2nd submit
-}
 
 // when the city button is clicked, the button value populates the input field, and a search is performed
 function buttonSearch(event) {
@@ -237,15 +243,14 @@ function buttonSearch(event) {
     foreWeather.innerHTML = "";
 
     // Get the displayed value of the clicked button
-    const btnValue = event.target.innerText;
+    const btnText = event.target.getAttribute('value');
+    const formatBtnText = btnText.replace(/-/g, " ");
+    const btnValue = formatBtnText;
 
     // set search input to the button value
     searchInputEl.value = btnValue;
     
     fetchGeocodeData(btnValue);
-    fetchCurrentWeather(btnValue);
-    fetchForecast(btnValue);
-
 }
 
 cityButtons.forEach(button => {
