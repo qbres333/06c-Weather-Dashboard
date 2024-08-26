@@ -34,10 +34,10 @@ function fetchGeocodeData(city) {
             if (cityGeocode.name == formattedCity) {
                 const cityObj = {};
                 cityObj["cityName"] = cityGeocode.name;
-                // lat and long must be rounded to 3 decimals to be matched in the weather functions
+                // lat and long rounded to 3 decimals, to be matched in the weather functions
                 cityObj["cityLatitude"] = cityGeocode.lat.toFixed(3);
                 cityObj["cityLongitude"] = cityGeocode.lon.toFixed(3);
-                // ----------------------------test output -----------------------------------
+                // ----------------print geocode data to the console (check) ----------------
                 console.log(cityObj["cityName"]);
                 console.log(cityObj["cityLatitude"]);
                 console.log(cityObj["cityLongitude"]);
@@ -52,6 +52,7 @@ function fetchGeocodeData(city) {
                 fetchForecast(formattedCity);
                 
             } else {
+                // if city is not found, render error message
                 const errorMsg = document.createElement("h3");
                 
                 errorMsg.innerHTML =
@@ -73,6 +74,7 @@ function storeSearchedCity(cityData) {
     localStorage.setItem('cityData', JSON.stringify(cityData));
 }
 
+// parse locally stored geocode data
 function getStoredData() {
     let cityData = JSON.parse(localStorage.getItem('cityData'));
     // if there's no data in local storage, store cities in new empty array
@@ -259,6 +261,7 @@ function buttonSearch(event) {
     fetchGeocodeData(btnValue);
 }
 
+// perform search when any of the city buttons are clicked
 cityButtons.forEach(button => {
     button.addEventListener("click", buttonSearch);
 });
