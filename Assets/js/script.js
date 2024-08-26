@@ -2,6 +2,9 @@ const searchFormEl = document.getElementById("search-form");
 const searchInputEl = document.querySelector("#search-input");
 const cityHeaderEl = document.getElementById("city-header");
 const cityButton = document.querySelector(".cityBtn");
+const currWeather = document.getElementById("current-card");
+const foreHeader = document.getElementById("forecast");
+const foreWeather = document.getElementById("container");
 
 const apiKey = '32545b0997265663df9ff6fd8f6c9fca';
 
@@ -9,7 +12,7 @@ const apiKey = '32545b0997265663df9ff6fd8f6c9fca';
 /* get latitude and longitude data by searching the city name,
 then store locally */ 
 function fetchGeocodeData(city) {  
-    // URL for direct Geocoding API call - converts city name input to coordinates
+    // URL for direct Geocoding API call - converts city name input to coordinates  
     const geocodeURL = `http://api.openweathermap.org/geo/1.0/direct?q=${city}&limit=1&appid=${apiKey}`;
 
     // request GeoCode data
@@ -102,28 +105,29 @@ function fetchForecast(city) {
         // Weather is in 3hr increments for each day. Return the 12pm temp data
         const middayForecasts = weatherData.list.filter(forecast => forecast.dt_txt.includes("12:00:00"));
         middayForecasts.forEach((forecast) => {
-            
-            //API date must be converted to unix timestamp.
-            const dateToday = dayjs(forecast.dt * 1000).format("MM/DD/YYYY");
-            const fTemp = convertKelvins(forecast.main.temp);
-            const icon = forecast.weather[0].icon;        
-            const windMPH = convertWindSpeed(forecast.wind.speed);
-            const humidity = forecast.main.humidity;
+          //API date must be converted to unix timestamp.
+          const dateToday = dayjs(forecast.dt * 1000).format("MM/DD/YYYY");
+          const fTemp = convertKelvins(forecast.main.temp);
+          const icon = forecast.weather[0].icon;
+          const windMPH = convertWindSpeed(forecast.wind.speed);
+          const humidity = forecast.main.humidity;
 
-            // Create a forecast card
-            const forecastCard = document.getElementById("container");
-            const forecastEl = document.createElement("div");
-            forecastEl.classList.add("has-text-white");
-            forecastEl.innerHTML = `
-                <h3 class="is-size-6 pl-2 has-text-weight-bold">${dateToday}</h3>
+          // Create a forecast card
+          foreHeader.innerHTML = `5-Day Forecast:`;
+          const forecastEl = document.createElement("div");
+          forecastEl.classList.add("has-text-white");
+          forecastEl.classList.add("has-background-info-dark");
+        //   forecastEl.classList.add("ml-0");
+          forecastEl.innerHTML = `
+                <h3 class="is-size-6 pl-2 pr-2 pt-2 has-text-weight-bold">${dateToday}</h3>
                 <img src="https://openweathermap.org/img/wn/${icon}@2x.png" alt="weather icon" class="image is-32x32 mr-2 mb-2"/>
-                <div class="is-size-7 mb-2 pl-2">Temp: ${fTemp}</div>
-                <div class="is-size-7 mb-2 pl-2">Wind: ${windMPH}</div>
-                <div class="is-size-7 mb-2 pl-2">Humidity: ${humidity}%</div>            
+                <div class="is-size-7 mb-1 pl-2 pr-2">Temp: ${fTemp}</div>
+                <div class="is-size-7 mb-1 pl-2 pr-2">Wind: ${windMPH}</div>
+                <div class="is-size-7 mb-1 pl-2 pr-2 pb-2">Humidity: ${humidity}%</div>            
                 `;
 
-            // Append forecast element to the container
-            forecastCard.appendChild(forecastEl);
+          // Append elements
+          foreWeather.appendChild(forecastEl);
         });
 
       })
@@ -134,8 +138,6 @@ function fetchForecast(city) {
 // retrieve current weather (today)
 function fetchCurrentWeather(city) {
     // get the geocode data for the city
-    fetchGeocodeData(city);
-    // parse stored data (if any)
     const cityData = getStoredData();
     const cityObj = cityData.find((cityObj) => cityObj.cityName == city)
     
@@ -157,34 +159,30 @@ function fetchCurrentWeather(city) {
             return response.json();
         })
         .then(function (weatherData) {
-        
-            // const [currentWeather] = weatherData;
-            // retrieve city weather info
-            
-                const cName = weatherData.name;
-                const dateToday = dayjs(weatherData.dt * 1000).format("MM/DD/YYYY");
-                const icon = weatherData.weather[0].icon;
-                // API temperature is in Kelvins. Call function to convert to F
-                const fTemp = convertKelvins(weatherData.main.temp);                
-                // API wind speed is in meters/sec. Call function to convert to MPH
-                const windMPH = convertWindSpeed(weatherData.wind.speed);
-                // API humidity is a percentage (add the % sign when rendered)
-                const humidity = weatherData.main.humidity.toFixed(0);
+            // retrieve city weather info            
+            const cName = weatherData.name;
+            const dateToday = dayjs(weatherData.dt * 1000).format("MM/DD/YYYY");
+            const icon = weatherData.weather[0].icon;
+            // API temperature is in Kelvins. Call function to convert to F
+            const fTemp = convertKelvins(weatherData.main.temp);                
+            // API wind speed is in meters/sec. Call function to convert to MPH
+            const windMPH = convertWindSpeed(weatherData.wind.speed);
+            // API humidity is a percentage (add the % sign when rendered)
+            const humidity = weatherData.main.humidity.toFixed(0);
 
-                // Create a current weather card
-                const currWeatherCard = document.getElementById("current-card");
-                const currWeatherEl = document.createElement("div");
-                currWeatherEl.classList.add("black-border");
-                currWeatherEl.innerHTML = `
-                    <h3 class="is-size-5 mr-5 pl-2">${cName} (${dateToday}) <img src="https://openweathermap.org/img/wn/${icon}@2x.png" alt="weather icon" class="image is-32x32"/>
-                    </h3>                    
-                    <div class="is-size-6 mr-5 pl-2 pb-2">Temp: ${fTemp}</div>
-                    <div class="is-size-6 mr-5 pl-2 pb-2">Wind: ${windMPH}</div>
-                    <div class="is-size-6 mr-5 pl-2 pb-2">Humidity: ${humidity}%</div>            
-                    `;
+            // Create a current weather card
+            const currWeatherEl = document.createElement("div");
+            currWeatherEl.classList.add("black-border");
+            currWeatherEl.innerHTML = `
+                <h3 class="is-size-5 mr-5 pl-2">${cName} (${dateToday}) <img src="https://openweathermap.org/img/wn/${icon}@2x.png" alt="weather icon" class="image is-32x32"/>
+                </h3>                    
+                <div class="is-size-6 mr-5 pl-2 pb-2">Temp: ${fTemp}</div>
+                <div class="is-size-6 mr-5 pl-2 pb-2">Wind: ${windMPH}</div>
+                <div class="is-size-6 mr-5 pl-2 pb-2">Humidity: ${humidity}%</div>            
+                `;
 
-                // Append forecast element to the container
-                currWeatherCard.appendChild(currWeatherEl);
+            // Append forecast element to the container
+            currWeather.appendChild(currWeatherEl);
              
         });
     }
@@ -202,57 +200,29 @@ function convertWindSpeed(metersPerSec) {
     return `${mph} MPH`;
 }
 
-/* ----------------------- old weather card functions ----------------------------
-// render current weather box
-function createCurrentWeatherCard() {
-    const currentWeatherCard = document.getElementById("current-card");
-    // Clear any existing content
-    currentWeatherCard.innerHTML = "";  
-    const currentCardBody = $("<div>").addClass("current-card-body");
-    const currWeatherHeader = $("<h2>").addClass("city-header p-2").text(`${weatherObj.name} (${weatherObj.date}) ${weatherObj.icon}`);
-    const currentTemp = $('<div>').addClass('current-Temp p-2').text(`Temp: ${weatherObj.temp}`);
-    const currentWind = $('<div>').addClass('current-Wind p-2').text(`Wind: ${weatherObj.wind}`);
-    const currentHumidity = $('<div>').addClass('current-Humidity p-2').text(`Humidity: ${weatherObj.humidity}%`);
-    // append current weather info to the card
-    currentCardBody.append(currWeatherHeader, currentTemp, currentWind, currentHumidity);
-    currentWeatherCard.append(currentCardBody);
-
-    return currentWeatherCard;
-
-}
-
-// render 5-day forecast data
-function createForecastCards() {
-
-    const forecastCard = document.getElementById("container");
-    const forecastCardBody = $("<div>").addClass(
-      "forecast-card-body card has-background-info-dark has-text-white"
-    );
-    const forecastHeader = $("<h2>").addClass("card-header date-header p-2").text(`${forecastObj.date}`);
-    const forecastTemp = $('<div>').addClass('forecast-Temp p-2').text(`Temp: ${forecastObj.temp}`);
-    const forecastWind = $('<div>').addClass('forecast-Wind p-2').text(`Wind: ${forecastObj.wind}`);
-    const forecastHumidity = $('<div>').addClass('forecast-Humidity p-2').text(`Humidity: ${forecastObj.humidity}%`);
-    // append current weather info to the card
-    forecastCardBody.append(forecastHeader, forecastTemp, forecastWind, forecastHumidity);
-    forecastCard.append(forecastCardBody);
-
-    return forecastCard;
-
-}
-*/
-
 
 // perform search and render data
-// 2 conditions: search button being clicked when there is an input value
-// and the button shortcuts being clicked
 function citySearch(event) {
-  event.preventDefault();
+    event.preventDefault();
 
-    fetchGeocodeData(searchInputEl.value);
-    fetchCurrentWeather(searchInputEl.value);
-    fetchForecast(searchInputEl.value);
+    currWeather.innerHTML = "";
+    foreHeader.innerHTML = "";
+    foreWeather.innerHTML = "";
+    const city = formatInput(searchInputEl.value);
+
+    fetchGeocodeData(city);
+    fetchCurrentWeather(city);
+    fetchForecast(city);
 
 }
 
 searchFormEl.addEventListener('submit', citySearch);
 
+// when the city button is clicked, the button value goes to the input field, and a search is performed.
+function formatInput(input) {
+    const firstLetter = input.charAt(0).toUpperCase();
+    const remainingLetters = input.substring(1).toLowerCase();
+    input = firstLetter + remainingLetters;
+    searchInputEl.value = input;
+    return searchInputEl.value; //with this included, geocode data prints to console but doesn't render
+}
