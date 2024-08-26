@@ -1,7 +1,7 @@
 const searchFormEl = document.getElementById("search-form");
 const searchInputEl = document.querySelector("#search-input");
 const cityHeaderEl = document.getElementById("city-header");
-const cityButton = document.querySelector(".cityBtn");
+const cityButtons = document.querySelectorAll(".cityBtn");
 const currWeather = document.getElementById("current-card");
 const foreHeader = document.getElementById("forecast");
 const foreWeather = document.getElementById("container");
@@ -201,7 +201,7 @@ function convertWindSpeed(metersPerSec) {
 
 // perform search and render data
 function citySearch(event) {
-    event.preventDefault();
+    event.preventDefault(); //should this be removed from both search functions and added to the listener?
     
     currWeather.innerHTML = "";
     foreHeader.innerHTML = "";
@@ -215,7 +215,9 @@ function citySearch(event) {
 
 }
 
+// perform search when search button is pressed
 searchFormEl.addEventListener('submit', citySearch);
+
 
 // standardize entries so that they match the API name format
 function formatInput(input) {
@@ -226,7 +228,7 @@ function formatInput(input) {
     return searchInputEl.value; //with this included, geocode data renders after 2nd submit
 }
 
-// when the city button is clicked, the button value goes to the input field, and a search is performed.
+// when the city button is clicked, the button value populates the input field, and a search is performed
 function buttonSearch(event) {
     event.preventDefault();
 
@@ -234,10 +236,18 @@ function buttonSearch(event) {
     foreHeader.innerHTML = "";
     foreWeather.innerHTML = "";
 
-    searchInputEl.value = cityButton.value.replace("-", " ");
+    // Get the displayed value of the clicked button
+    const btnValue = event.target.innerText;
+
+    // set search input to the button value
+    searchInputEl.value = btnValue;
     
-    fetchGeocodeData(searchInputEl.value);
-    fetchCurrentWeather(searchInputEl.value);
-    fetchForecast(searchInputEl.value);
+    fetchGeocodeData(btnValue);
+    fetchCurrentWeather(btnValue);
+    fetchForecast(btnValue);
 
 }
+
+cityButtons.forEach(button => {
+    button.addEventListener("click", buttonSearch);
+});
