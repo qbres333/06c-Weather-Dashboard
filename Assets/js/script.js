@@ -4,9 +4,7 @@ const cityButtons = document.querySelectorAll(".cityBtn");
 const currWeather = document.getElementById("current-card");
 const foreHeader = document.getElementById("forecast");
 const foreWeather = document.getElementById("container");
-
 const apiKey = '32545b0997265663df9ff6fd8f6c9fca';
-
 
 /* get latitude and longitude data by searching the city name,
 then store locally */ 
@@ -39,7 +37,7 @@ function fetchGeocodeData(city) {
                 // lat and long must be rounded to 3 decimals to be matched in the weather functions
                 cityObj["cityLatitude"] = cityGeocode.lat.toFixed(3);
                 cityObj["cityLongitude"] = cityGeocode.lon.toFixed(3);
-                // ----------------------------test -----------------------------------
+                // ----------------------------test output -----------------------------------
                 console.log(cityObj["cityName"]);
                 console.log(cityObj["cityLatitude"]);
                 console.log(cityObj["cityLongitude"]);
@@ -47,7 +45,7 @@ function fetchGeocodeData(city) {
                 // add the geocode data object to the array
                 geocodeArray.push(cityObj);
                 storeSearchedCity(geocodeArray);
-                // can I call weather functions here?
+                // functions are asynchronous so call weather functions here
                 const formattedCity = formatInput(city);
 
                 fetchCurrentWeather(formattedCity);
@@ -112,11 +110,11 @@ function fetchCurrentWeather(city) {
             const cName = cityObj.cityName;
             const dateToday = dayjs(weatherData.dt * 1000).format("MM/DD/YYYY");
             const icon = weatherData.weather[0].icon;
-            // API temperature is in Kelvins. Call function to convert to F
+            // API temperature is in Kelvins. Convert to F
             const fTemp = convertKelvins(weatherData.main.temp);                
-            // API wind speed is in meters/sec. Call function to convert to MPH
+            // API wind speed is in meters/sec. Convert to MPH
             const windMPH = convertWindSpeed(weatherData.wind.speed);
-            // API humidity is a percentage (add the % sign when rendered)
+            // API humidity is a percentage, shown as a number
             const humidity = weatherData.main.humidity.toFixed(0);
 
             // Create a current weather card
@@ -124,15 +122,15 @@ function fetchCurrentWeather(city) {
 
             currWeatherEl.classList.add("black-border");
             currWeatherEl.innerHTML = `
-                <h3 class="is-size-5 mr-5 pl-2 pt-1 has-text-weight-bold level-left">${cName} ${dateToday} 
-                  <img src="https://openweathermap.org/img/wn/${icon}@2x.png" alt="weather icon" class="icon is-32x32"/>
+                <h3 class="is-size-3 mr-5 pl-3 pt-1 level-left">${cName} (${dateToday}) 
+                  <img src="https://openweathermap.org/img/wn/${icon}@2x.png" alt="weather icon" class="icon is-large has-contrast"/>
                 </h3>                    
-                <div class="is-size-6 mr-5 pl-2 pb-2">Temp: ${fTemp}</div>
-                <div class="is-size-6 mr-5 pl-2 pb-2">Wind: ${windMPH}</div>
-                <div class="is-size-6 mr-5 pl-2 pb-2">Humidity: ${humidity}%</div>            
+                <div class="is-size-6 has-text-weight-bold mr-5 pl-3 pb-2">Temp: ${fTemp}</div>
+                <div class="is-size-6 has-text-weight-bold mr-5 pl-3 pb-2">Wind: ${windMPH}</div>
+                <div class="is-size-6 has-text-weight-bold mr-5 pl-3 pb-2">Humidity: ${humidity}%</div>            
                 `;
 
-            // Append forecast element to the container
+            // Append weather element
             currWeather.appendChild(currWeatherEl);
              
         });
@@ -175,20 +173,20 @@ function fetchForecast(city) {
 
           // Create a forecast card
           foreHeader.innerHTML = `5-Day Forecast:`;
-          const $forecastCard = $("#container"); //Bulma not rendering correctly so JQuery used here to render forecast horizontally
+          const $forecastCard = $("#container"); //JQuery used here to render forecast horizontally
           const $forecastEl = $("<div>");
           $forecastEl.addClass(
             "column ml-2 has-text-white has-background-info-dark"
           );
           $forecastEl.html(`
                 <h3 class="is-size-6 pl-2 pr-2 pt-2 has-text-weight-bold">${dateToday}</h3>
-                <img src="https://openweathermap.org/img/wn/${icon}@2x.png" alt="weather icon" class="image is-32x32 mr-2 mb-2"/>
-                <div class="is-size-7 mb-1 pl-2 pr-2">Temp: ${fTemp}</div>
-                <div class="is-size-7 mb-1 pl-2 pr-2">Wind: ${windMPH}</div>
-                <div class="is-size-7 mb-1 pl-2 pr-2 pb-2">Humidity: ${humidity}%</div>            
+                <img src="https://openweathermap.org/img/wn/${icon}@2x.png" alt="weather icon" class="image is-48x48 pl-1 mr-2 mb-2"/>
+                <div class="is-size-6 mb-1 pl-2 pr-2">Temp: ${fTemp}</div>
+                <div class="is-size-6 mb-1 pl-2 pr-2">Wind: ${windMPH}</div>
+                <div class="is-size-6 mb-1 pl-2 pr-2 pb-2">Humidity: ${humidity}%</div>            
                 `);
 
-          // Append elements
+          // Append forecast element
           $forecastCard.append($forecastEl);
         });
 
@@ -196,7 +194,6 @@ function fetchForecast(city) {
      
   }
 }
-
 
 // function to convert kelvins to fahrenheit
 function convertKelvins(kelvins) {
@@ -220,6 +217,7 @@ function formatInput(input) {
         const remainingLetters = word.substring(1).toLowerCase();
         return firstLetter + remainingLetters;
     });
+    // create string of words separated by a space
     input = formatWords.join(' ');
     searchInputEl.value = input;
     return searchInputEl.value;
@@ -227,7 +225,7 @@ function formatInput(input) {
 
 // perform search and render data
 function citySearch(event) {
-    event.preventDefault(); //should this be removed from both search functions and added to the listener?
+    event.preventDefault(); 
     
     currWeather.innerHTML = "";
     foreHeader.innerHTML = "";
@@ -242,7 +240,7 @@ function citySearch(event) {
 // perform search when search button is pressed
 searchFormEl.addEventListener('submit', citySearch);
 
-// when the city button is clicked, the button value populates the input field, and a search is performed
+// when the city button is clicked, the button value populates the input field & geocode function called
 function buttonSearch(event) {
     event.preventDefault();
 

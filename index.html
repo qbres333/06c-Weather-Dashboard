@@ -8,7 +8,6 @@
       rel="stylesheet"
       href="https://cdn.jsdelivr.net/npm/bulma@1.0.2/css/bulma.min.css"
     />   
-    <!-- <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css" /> -->
     <link rel="stylesheet" href="./assets/css/jass.css" />
     <link rel="stylesheet" href="./assets/css/style.css" />
   </head>
@@ -17,13 +16,14 @@
       id="header"
       class="title is-1 is-spaced p-2 has-text-white has-text-centered has-background-link-90"
     >Weather Dashboard</header>
-
+<!-- weather search and results sections below the header -->
     <div
       class="columns is-2 is-flex is-align-items-flex-start is-justify-content-flex-start 
       is-align-content-flex-start has-background-white min-vh-100"
     >
+    <!-- search section is 3/12 of the grid -->
       <div class="column is-3 has-background-white p-3 ml-3">
-        <h2 class="title is-3 has-text-black mb-3">Search for a City:</h2>
+        <h2 class="title is-3 has-text-black has-text-weight-bold mb-3">Search for a City:</h2>
         <form id="search-form" class="mb-2">
           <input
             id="search-input"
@@ -74,8 +74,9 @@
         </form>
       </div>
 
+      <!-- search results are 9/12 of the grid -->
       <div class="column is-9">
-        <div id="current-card" class="mr-6 mb-2 has-text-black">
+        <div id="current-card" class="mr-6 mb-2 mt-0 has-text-black">
       
         </div>
 
