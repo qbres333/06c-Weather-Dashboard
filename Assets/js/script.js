@@ -30,7 +30,6 @@ function fetchGeocodeData(city) {
         /* search API for city weather info; API output is an array of objects, 
             so geocodeData is an array and cityGeocode is an object */
         for (const cityGeocode of geocodeData) {
-          // if (typeof cityGeocode === "object") {
             if (cityGeocode.name == city) {
                 const cityObj = {};
                 cityObj["cityName"] = cityGeocode.name;
@@ -45,23 +44,22 @@ function fetchGeocodeData(city) {
                 // add the geocode data object to the array
                 geocodeArray.push(cityObj);
                 storeSearchedCity(geocodeArray);
+                
             } else {
                 const errorMsg = document.createElement("h3");
                 
                 errorMsg.innerHTML =
                     "No results found. Please check spelling and try again.";
                 cityHeaderEl.appendChild(errorMsg);
-                console.log(errorMsg);
-                               
+                console.log(errorMsg);                               
             }
-            
-          // }
+                
         }
       })
       .catch(function (error) {
         console.error(error);
       });
-    // } 
+  
 }
 
 // store city data locally
@@ -204,10 +202,11 @@ function convertWindSpeed(metersPerSec) {
 // perform search and render data
 function citySearch(event) {
     event.preventDefault();
-
+    
     currWeather.innerHTML = "";
     foreHeader.innerHTML = "";
     foreWeather.innerHTML = "";
+
     const city = formatInput(searchInputEl.value);
 
     fetchGeocodeData(city);
@@ -218,11 +217,27 @@ function citySearch(event) {
 
 searchFormEl.addEventListener('submit', citySearch);
 
-// when the city button is clicked, the button value goes to the input field, and a search is performed.
+// standardize entries so that they match the API name format
 function formatInput(input) {
     const firstLetter = input.charAt(0).toUpperCase();
     const remainingLetters = input.substring(1).toLowerCase();
     input = firstLetter + remainingLetters;
     searchInputEl.value = input;
-    return searchInputEl.value; //with this included, geocode data prints to console but doesn't render
+    return searchInputEl.value; //with this included, geocode data renders after 2nd submit
+}
+
+// when the city button is clicked, the button value goes to the input field, and a search is performed.
+function buttonSearch(event) {
+    event.preventDefault();
+
+    currWeather.innerHTML = "";
+    foreHeader.innerHTML = "";
+    foreWeather.innerHTML = "";
+
+    searchInputEl.value = cityButton.value.replace("-", " ");
+    
+    fetchGeocodeData(searchInputEl.value);
+    fetchCurrentWeather(searchInputEl.value);
+    fetchForecast(searchInputEl.value);
+
 }
