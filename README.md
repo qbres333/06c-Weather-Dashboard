@@ -18,16 +18,13 @@ https://github.com/qbres333/06c-Weather-Dashboard
 
 This app can be used by any person who wants to plan their outdoor activities for the current day, or for the next 5 days.
 
+The following image shows the web application's appearance and functionality:
+
+![The weather app includes a search option, a list of cities, and a five-day forecast and current weather conditions for New York County (the official name for Manhattan in New York).](./Assets/images/dashboard_preview.png "preview")
 
 ## Features
 
 By typing in the city name using Latin alphabet letters, in any letter case, weather data is retrieved from the API. Non-letter inputs into the search field do not produce any output.
-
-## Mock-Up
-
-The following image shows the web application's appearance and functionality:
-
-![The weather app includes a search option, a list of cities, and a five-day forecast and current weather conditions for New York County (the official name for Manhattan in New York).](./Assets/images/dashboard_preview.png "preview")
 
 ## Credits
 
