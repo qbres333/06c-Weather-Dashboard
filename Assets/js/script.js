@@ -84,6 +84,61 @@ function getStoredData() {
     return cityData;
 }
 
+// retrieve current weather (today)
+function fetchCurrentWeather(city) {
+    // get the geocode data for the city
+    const cityData = getStoredData();
+    const cityObj = cityData.find((cityObj) => cityObj.cityName == city)
+    
+    // if geocode data is retrieved for the city
+    if (cityObj) {
+        // get lat/lon data from the parsed data
+        const lat = cityObj.cityLatitude;
+        const lon = cityObj.cityLongitude;
+        // URL for fetching weather data by latitude,longitude
+        const regURL = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${apiKey}`;
+
+        //send API request
+        fetch(regURL)
+        .then(function (response) {
+            // if the request fails, show the JSON error. Otherwise return the promise.
+            if (!response.ok) {
+            throw response.json();
+            }
+            return response.json();
+        })
+        .then(function (weatherData) {
+            // retrieve city weather info            
+            const cName = cityObj.cityName;
+            const dateToday = dayjs(weatherData.dt * 1000).format("MM/DD/YYYY");
+            const icon = weatherData.weather[0].icon;
+            // API temperature is in Kelvins. Call function to convert to F
+            const fTemp = convertKelvins(weatherData.main.temp);                
+            // API wind speed is in meters/sec. Call function to convert to MPH
+            const windMPH = convertWindSpeed(weatherData.wind.speed);
+            // API humidity is a percentage (add the % sign when rendered)
+            const humidity = weatherData.main.humidity.toFixed(0);
+
+            // Create a current weather card
+            const currWeatherEl = document.createElement("div");
+
+            currWeatherEl.classList.add("black-border");
+            currWeatherEl.innerHTML = `
+                <h3 class="is-size-5 mr-5 pl-2 pt-1 has-text-weight-bold level-left">${cName} ${dateToday} 
+                  <img src="https://openweathermap.org/img/wn/${icon}@2x.png" alt="weather icon" class="icon is-32x32"/>
+                </h3>                    
+                <div class="is-size-6 mr-5 pl-2 pb-2">Temp: ${fTemp}</div>
+                <div class="is-size-6 mr-5 pl-2 pb-2">Wind: ${windMPH}</div>
+                <div class="is-size-6 mr-5 pl-2 pb-2">Humidity: ${humidity}%</div>            
+                `;
+
+            // Append forecast element to the container
+            currWeather.appendChild(currWeatherEl);
+             
+        });
+    }
+}
+
 // retrieve 5-day forecast
 function fetchForecast(city) {
   // get the geocode data for the city
@@ -142,58 +197,6 @@ function fetchForecast(city) {
   }
 }
 
-// retrieve current weather (today)
-function fetchCurrentWeather(city) {
-    // get the geocode data for the city
-    const cityData = getStoredData();
-    const cityObj = cityData.find((cityObj) => cityObj.cityName == city)
-    
-    // if geocode data is retrieved for the city
-    if (cityObj) {
-        // get lat/lon data from the parsed data
-        const lat = cityObj.cityLatitude;
-        const lon = cityObj.cityLongitude;
-        // URL for fetching weather data by latitude,longitude
-        const regURL = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${apiKey}`;
-
-        //send API request
-        fetch(regURL)
-        .then(function (response) {
-            // if the request fails, show the JSON error. Otherwise return the promise.
-            if (!response.ok) {
-            throw response.json();
-            }
-            return response.json();
-        })
-        .then(function (weatherData) {
-            // retrieve city weather info            
-            const cName = cityObj.cityName;
-            const dateToday = dayjs(weatherData.dt * 1000).format("MM/DD/YYYY");
-            const icon = weatherData.weather[0].icon;
-            // API temperature is in Kelvins. Call function to convert to F
-            const fTemp = convertKelvins(weatherData.main.temp);                
-            // API wind speed is in meters/sec. Call function to convert to MPH
-            const windMPH = convertWindSpeed(weatherData.wind.speed);
-            // API humidity is a percentage (add the % sign when rendered)
-            const humidity = weatherData.main.humidity.toFixed(0);
-
-            // Create a current weather card
-            const currWeatherEl = document.createElement("div");
-            currWeatherEl.classList.add("black-border");
-            currWeatherEl.innerHTML = `
-                <h3 class="is-size-5 mr-5 pl-2">${cName} (${dateToday}) <img src="https://openweathermap.org/img/wn/${icon}@2x.png" alt="weather icon" class="image is-32x32"/>
-                </h3>                    
-                <div class="is-size-6 mr-5 pl-2 pb-2">Temp: ${fTemp}</div>
-                <div class="is-size-6 mr-5 pl-2 pb-2">Wind: ${windMPH}</div>
-                <div class="is-size-6 mr-5 pl-2 pb-2">Humidity: ${humidity}%</div>            
-                `;
-
-            // Append forecast element to the container
-            currWeather.appendChild(currWeatherEl);
-             
-        });
-    }
-}
 
 // function to convert kelvins to fahrenheit
 function convertKelvins(kelvins) {

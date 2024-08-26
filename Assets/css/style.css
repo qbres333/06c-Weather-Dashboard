@@ -16,6 +16,17 @@ h6 {
     background: linear-gradient(to right, lightblue, navy);
 }
 
+.cityBtn {
+  margin-top: 1rem;
+}
+
+
 .black-border {
   border: 1px solid black;
+}
+
+.divider {
+  border: 1px solid gray;
+  margin-top: 1rem;
+  margin-bottom: 1rem;
 }

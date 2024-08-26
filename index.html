@@ -16,59 +16,59 @@
     <header
       id="header"
       class="title is-1 is-spaced p-2 has-text-white has-text-centered has-background-link-90"
-    >
-      Weather Dashboard
-    </header>
+    >Weather Dashboard</header>
 
     <div
       class="columns is-2 is-flex is-align-items-flex-start is-justify-content-flex-start 
       is-align-content-flex-start has-background-white min-vh-100"
     >
       <div class="column is-3 has-background-white p-3 ml-3">
-        <h2 class="title is-3 has-text-black">Search for a City:</h2>
+        <h2 class="title is-3 has-text-black mb-3">Search for a City:</h2>
         <form id="search-form" class="mb-2">
           <input
             id="search-input"
-            class="input is-fullwidth block"
+            class="input is-fullwidth mt-0 mb-4"
             type="text"
             placeholder="City Name"
           />
 
-          <button type="submit" class="button searchBtn is-info is-fullwidth 
-          block has-text-white-ter">Search</button>
+          <button type="submit" class="button searchBtn is-info is-fullwidth
+           has-text-white-ter">Search</button>
+          <!-- dividing line -->
+          <hr class="divider">
 
           <ul id="city-list">
             <li
               value="Atlanta"
-              class="button cityBtn is-fullwidth has-background-grey-light has-text-black block"
+              class="button cityBtn is-fullwidth has-background-grey-light has-text-black"
             >Atlanta</li>
             <li
               value="Denver"
-              class="button cityBtn is-fullwidth has-background-grey-light has-text-black block"
+              class="button cityBtn is-fullwidth has-background-grey-light has-text-black"
             >Denver</li>
             <li
               value="Seattle"
-              class="button cityBtn is-fullwidth has-background-grey-light has-text-black block"
+              class="button cityBtn is-fullwidth has-background-grey-light has-text-black"
             >Seattle</li>
             <li
               value="San-Francisco"
-              class="button cityBtn is-fullwidth has-background-grey-light has-text-black block"
+              class="button cityBtn is-fullwidth has-background-grey-light has-text-black"
             >San Francisco</li>
             <li
               value="Orlando"
-              class="button cityBtn is-fullwidth has-background-grey-light has-text-black block"
+              class="button cityBtn is-fullwidth has-background-grey-light has-text-black"
             >Orlando</li>
             <li
               value="New-York-County"
-              class="button cityBtn is-fullwidth has-background-grey-light has-text-black block"
+              class="button cityBtn is-fullwidth has-background-grey-light has-text-black"
             >New York</li>
             <li
               value="Chicago"
-              class="button cityBtn is-fullwidth has-background-grey-light has-text-black block"
+              class="button cityBtn is-fullwidth has-background-grey-light has-text-black"
             >Chicago</li>
             <li
               value="Austin"
-              class="button cityBtn is-fullwidth has-background-grey-light has-text-black block"
+              class="button cityBtn is-fullwidth has-background-grey-light has-text-black"
             >Austin</li>
           </ul>
         </form>
@@ -86,9 +86,6 @@
         <div id="5-day" class="card mr-5 is-shadowless" 
           style="border: 1px solid white;">
             <div id="container" class="columns mr-5">
-         <!--   <div id="container" class="column is-one-fifth ml-0"
-                >
-                </div>    end of container 1 -->
           </div>
         </div>
       </div>
